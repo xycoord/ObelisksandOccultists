@@ -1,36 +1,61 @@
 package com.xycoord.obelisksandoccultists
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.widget.NestedScrollView
-import android.view.View
-import android.widget.TextView
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
+
+    val RC_SIGN_IN = 9001
+
+    var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+    var gac = GoogleApiClient.Builder(this)
+            .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+            .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val myButton = findViewById(R.id.myHoveringButton) as FloatingActionButton
-        val myText = findViewById(R.id.myText) as TextView
-        val drawer = findViewById(R.id.nestedScrollView) as NestedScrollView
-        val drawerButtonTemp = findViewById(R.id.myHoveringButton2) as FloatingActionButton
-
-        myButton.setOnClickListener {
-            if(myText.text.toString() == getString(R.string.test))
-                myText.text = getString(R.string.test2)
-            else
-                myText.text = getString(R.string.test)
-        }
-
-        drawerButtonTemp.setOnClickListener {
-            if(drawer.visibility == View.VISIBLE)
-                drawer.visibility = View.GONE
-            else
-                drawer.visibility = View.VISIBLE
-        }
-
+        signInButton.setOnClickListener{view -> SignIn() }
+        signOutButton.setOnClickListener{view -> SignOut() }
     }
+
+    fun SignIn(){
+        val singInIntent = Auth.GoogleSignInApi.getSignInIntent(gac)
+        startActivityForResult(singInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
+            handleSignInResult(result)
+        }
+    }
+
+    private fun handleSignInResult(result: GoogleSignInResult?) {
+        if(result!!.isSuccess){
+            val account = result.signInAccount
+            textView_Name.text = account!!.displayName
+        }
+    }
+
+    fun SignOut(){
+        Auth.GoogleSignInApi.signOut(gac).setResultCallback { resultCallback -> textView_Name.text = "signed out" }
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }
