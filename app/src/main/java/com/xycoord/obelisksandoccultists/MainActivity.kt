@@ -14,23 +14,23 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
 
     val RC_SIGN_IN = 9001
 
-    var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-    var gac = GoogleApiClient.Builder(this)
-            .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-            .build()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        signInButton.setOnClickListener{view -> SignIn() }
-        signOutButton.setOnClickListener{view -> SignOut() }
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+        val gac = GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
+
+        signInButton.setOnClickListener{view -> SignIn(gac) }
+        signOutButton.setOnClickListener{view -> SignOut(gac) }
     }
 
-    fun SignIn(){
+    fun SignIn(gac: GoogleApiClient){
         val singInIntent = Auth.GoogleSignInApi.getSignInIntent(gac)
         startActivityForResult(singInIntent, RC_SIGN_IN)
     }
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         }
     }
 
-    fun SignOut(){
+    fun SignOut(gac: GoogleApiClient){
         Auth.GoogleSignInApi.signOut(gac).setResultCallback { resultCallback -> textView_Name.text = "signed out" }
     }
 
