@@ -43,10 +43,13 @@ class MainActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
         }
     }
 
-    private fun handleSignInResult(result: GoogleSignInResult?) {
-        if(result!!.isSuccess){
+    private fun handleSignInResult(result: GoogleSignInResult) {
+        if(result.isSuccess){
             val account = result.signInAccount
-            textView_Name.text = account!!.displayName
+            if (account!=null)
+            textView_Name.text = account.displayName
+        } else {
+            textView_Name.text = result.isSuccess.toString()
         }
     }
 
