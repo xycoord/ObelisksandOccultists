@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var fbAuth : FirebaseAuth
     lateinit var fbDB : FirebaseFirestore
 
+    lateinit var currentUser : FirebaseUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         fbAuth = FirebaseAuth.getInstance()
         fbDB = FirebaseFirestore.getInstance()
-
-        dataTests()
 
         setSupportActionBar(activ_main_tool)
     }
@@ -56,8 +56,9 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onStart() {
         super.onStart()
-        val currentUser = fbAuth.currentUser
+        currentUser = fbAuth.currentUser!!
         updateUI(currentUser)
+        dataTests()
     }
 
     private fun updateUI(currentUser: FirebaseUser?){
@@ -74,14 +75,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun dataTests(){
         val user = HashMap<String, Any>()
-        user.put("first", "Ada")
-        user.put("last", "Lovelace")
-        user.put("born", 1815)
+        user.put("name", currentUser.displayName.toString())
+        user.put("email", currentUser.email.toString())
 
-        fbDB.collection(COLLECTION_USERS)
-                .add(user)
+        fbDB.collection(COLLECTION_USERS).document(currentUser.uid)
+                .set(user, SetOptions.merge())
                 .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()) }
+                    Log.d(TAG, "DocumentSnapshot added ") }
                 .addOnFailureListener{e ->  Log.w(TAG, "Error adding document", e);}
 
         fbDB.collection(COLLECTION_USERS)
