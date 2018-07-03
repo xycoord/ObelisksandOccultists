@@ -78,19 +78,20 @@ class MainActivity : AppCompatActivity() {
         user.put("name", currentUser.displayName.toString())
         user.put("email", currentUser.email.toString())
 
+
         fbDB.collection(COLLECTION_USERS).document(currentUser.uid)
                 .set(user, SetOptions.merge())
                 .addOnSuccessListener { documentReference ->
                     Log.d(TAG, "DocumentSnapshot added ") }
                 .addOnFailureListener{e ->  Log.w(TAG, "Error adding document", e);}
 
-        fbDB.collection(COLLECTION_USERS)
+        fbDB.collection(COLLECTION_USERS).document(currentUser.uid)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful)
-                        for (document in task.result) {
-                            Log.d(TAG, document.id + " => " + document.data)
-                        }
+                            Log.d(TAG, task.result.id + " => " + task.result.data)
+                    else Log.d(TAG, "unsucessful")
+
                 }
     }
 
