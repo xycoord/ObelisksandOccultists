@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Obelisks and Occultists</string>
     <string name="sign_out">Sign Out</string>
-    <string name="no_user_signed_in">Signed Out.</string>>
+    <string name="signed_in">You are signed in as:</string>
+    <string name="no_user_signed_in">It appears that no one has signed in.</string>
+    <string name="content_description_logo">Obelisks And Occultists Logo</string>>
 </resources>
