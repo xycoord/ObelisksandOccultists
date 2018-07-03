@@ -33,6 +33,12 @@ class MainActivity : AppCompatActivity() {
         fbDB = FirebaseFirestore.getInstance()
 
         setSupportActionBar(activ_main_tool)
+        FABNewCharacter.setOnClickListener{view -> launchNewCharacter()}
+    }
+
+    private fun launchNewCharacter() {
+        val intent = Intent(this,CharacterActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

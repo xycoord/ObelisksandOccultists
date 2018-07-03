@@ -14,15 +14,20 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"
-                android:theme="@style/AppThemeNoActionBar">
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppThemeNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Sheet"></activity>
+        <activity android:name=".Sheet" />
+        <activity
+            android:name=".CharacterActivity"
+            android:label="@string/title_activity_character"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
