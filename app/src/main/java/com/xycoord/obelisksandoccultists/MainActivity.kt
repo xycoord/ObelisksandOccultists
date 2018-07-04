@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchNewCharacter() {
-        val intent = Intent(this,CharacterActivity::class.java)
-        startActivity(intent)
+        val dialog = DialogNewCharacter()
+        dialog.show(supportFragmentManager, "dlg")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

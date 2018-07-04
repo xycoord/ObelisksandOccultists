@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/editText_dialog_newCharacter_name"
+        style="@android:style/Widget.AutoCompleteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_dialog_newCharacter_titile"
+        android:layout_below="@+id/textView_dialog_newCharacter_titile"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/editText_dialog_newCharacter_name_hint"/>
+
+    <TextView
+        android:id="@+id/textView_dialog_newCharacter_titile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/title_activity_character"
+        android:textAppearance="@android:style/TextAppearance.Material.DialogWindowTitle" />
+
+    <Button
+        android:id="@+id/button_dialog_newCharacter_create"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/editText_dialog_newCharacter_name"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/button_activity_character_create" />
+
+    <Button
+        android:id="@+id/button_dialog_newCharacter_cancel"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button_dialog_newCharacter_create"
+        android:layout_toStartOf="@+id/button_dialog_newCharacter_create"
+        android:text="@string/button_activity_character_cancel" />
+</RelativeLayout>
