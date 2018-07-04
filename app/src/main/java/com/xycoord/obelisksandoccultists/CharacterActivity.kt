@@ -6,17 +6,38 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_character.*
 import kotlinx.android.synthetic.main.app_bar_character.*
 
 class CharacterActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    lateinit var characterId: String
+    lateinit var characterName: String
+    lateinit var fbDB: FirebaseFirestore
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character)
         setSupportActionBar(toolbar)
+
+        characterId = intent.getStringExtra(MainActivity.TAG_CHARACTERID).toString()
+        fbDB = FirebaseFirestore.getInstance()
+        fbDB.collection(MainActivity.COLLECTION_CHARACTERS).document(characterId)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        characterName = task.result.getString("name")!!
+                        Log.d(MainActivity.TAG, task.result.id + " => " + characterName)
+                        title = characterName
+                    }
+                    else Log.d(MainActivity.TAG, "unsucessful")
+
+                }
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

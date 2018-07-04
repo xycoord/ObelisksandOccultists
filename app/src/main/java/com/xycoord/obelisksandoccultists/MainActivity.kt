@@ -17,8 +17,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    val TAG = "ObelisksAndOccultists"
-    val COLLECTION_USERS = "users"
 
     lateinit var fbAuth : FirebaseAuth
     lateinit var fbDB : FirebaseFirestore
@@ -97,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful)
                             Log.d(TAG, task.result.id + " => " + task.result.data)
                     else Log.d(TAG, "unsucessful")
-
                 }
     }
 
@@ -107,6 +104,12 @@ class MainActivity : AppCompatActivity() {
         launchLoginActivity()
     }
 
+    companion object {
+        val TAG = "ObelisksAndOccultists"
+        val COLLECTION_USERS = "users"
+        val COLLECTION_CHARACTERS = "characters"
+        val TAG_CHARACTERID = "characterId"
+    }
 
 
 }
