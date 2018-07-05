@@ -2,24 +2,30 @@ package com.xycoord.obelisksandoccultists
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.util.Log
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.android.synthetic.main.dialog_new_character.view.*
 
 class DialogNewCharacter : DialogFragment() {
 
     lateinit var fbDB: FirebaseFirestore
+    lateinit var fbAuth: FirebaseAuth
+    lateinit var currentUser: FirebaseUser
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
 
         fbDB = FirebaseFirestore.getInstance()
+        fbAuth = FirebaseAuth.getInstance()
+        currentUser = fbAuth.currentUser!!
 
         val view = activity!!.layoutInflater.inflate(R.layout.dialog_new_character,null)
 
@@ -46,6 +52,12 @@ class DialogNewCharacter : DialogFragment() {
         fbDB.collection(MainActivity.COLLECTION_CHARACTERS)
                 .add(newCharacterMap)
                 .addOnSuccessListener { documentReference ->
+                    val map = HashMap<String, Boolean>()
+                    map.put(documentReference.id, true)
+                    val charMap = characterMap(map)
+                    fbDB.collection(MainActivity.COLLECTION_USERS).document(currentUser.uid)
+                            .set(charMap, SetOptions.merge())
+
                     if (context != null) launchCharacterActivity(context, documentReference.id)
                 }
                 .addOnFailureListener{e ->  Log.w(MainActivity.TAG, "Error adding document", e);}

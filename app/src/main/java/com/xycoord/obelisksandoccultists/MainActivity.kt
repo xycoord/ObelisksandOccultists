@@ -17,10 +17,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-
     lateinit var fbAuth : FirebaseAuth
     lateinit var fbDB : FirebaseFirestore
-
     lateinit var currentUser : FirebaseUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
     override fun onStart() {
         super.onStart()
         currentUser = fbAuth.currentUser!!
@@ -82,7 +81,6 @@ class MainActivity : AppCompatActivity() {
         user.put("name", currentUser.displayName.toString())
         user.put("email", currentUser.email.toString())
 
-
         fbDB.collection(COLLECTION_USERS).document(currentUser.uid)
                 .set(user, SetOptions.merge())
                 .addOnSuccessListener { documentReference ->
@@ -98,7 +96,6 @@ class MainActivity : AppCompatActivity() {
                 }
     }
 
-
     private fun SignOut(){
         fbAuth.signOut()
         launchLoginActivity()
@@ -109,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         val COLLECTION_USERS = "users"
         val COLLECTION_CHARACTERS = "characters"
         val TAG_CHARACTERID = "characterId"
+        val SUBCOLLECTION_USERS_CHARACTERS = "users_characters"
     }
-
-
 }
