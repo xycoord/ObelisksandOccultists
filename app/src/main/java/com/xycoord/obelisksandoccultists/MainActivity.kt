@@ -13,6 +13,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var fbAuth : FirebaseAuth
     lateinit var fbDB : FirebaseFirestore
     lateinit var currentUser : FirebaseUser
+
+    var charactersArray = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,8 +94,18 @@ class MainActivity : AppCompatActivity() {
         fbDB.collection(COLLECTION_USERS).document(currentUser.uid)
                 .get()
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful)
-                            Log.d(TAG, task.result.id + " => " + task.result.data)
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "one")
+                        for (doc in task.result.data!!) {
+                            if (doc.component1() == "characters" && doc.component2().javaClass == HashMap::class.java) {
+                                Log.d(TAG, task.result.id + " => " + doc.component2().javaClass)
+                                for (pair in doc.component2() as HashMap<String, Any>) {
+                                    charactersArray.add(pair.component1())
+                                }
+                            }
+                        }
+                    Log.d(TAG, charactersArray.toString())
+                    }
                     else Log.d(TAG, "unsucessful")
                 }
     }
