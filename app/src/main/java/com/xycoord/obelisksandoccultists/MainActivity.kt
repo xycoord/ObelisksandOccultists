@@ -3,9 +3,12 @@ package com.xycoord.obelisksandoccultists
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Adapter
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -23,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var fbDB : FirebaseFirestore
     lateinit var currentUser : FirebaseUser
 
-    var charactersArray = ArrayList<String>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,23 +94,33 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "DocumentSnapshot added ") }
                 .addOnFailureListener{e ->  Log.w(TAG, "Error adding document", e);}
 
-        fbDB.collection(COLLECTION_USERS).document(currentUser.uid)
+        getCharacters(currentUser.uid)
+    }
+
+    private fun getCharacters(uid: String) {
+        val charactersArray = ArrayList<String>()
+        fbDB.collection(COLLECTION_USERS).document(uid)
                 .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d(TAG, "one")
+                        Log.d(TAG, "sucessful")
                         for (doc in task.result.data!!) {
                             if (doc.component1() == "characters" && doc.component2().javaClass == HashMap::class.java) {
-                                Log.d(TAG, task.result.id + " => " + doc.component2().javaClass)
-                                for (pair in doc.component2() as HashMap<String, Any>) {
+                                for (pair in doc.component2() as HashMap<String, Boolean>) {
                                     charactersArray.add(pair.component1())
                                 }
                             }
                         }
-                    Log.d(TAG, charactersArray.toString())
+                        setupRecyclerCharacters(charactersArray)
                     }
                     else Log.d(TAG, "unsucessful")
                 }
+
+    }
+    private fun setupRecyclerCharacters(characterIds: ArrayList<String>){
+        Log.d(TAG, characterIds.toString())
+        character_recycler.layoutManager = LinearLayoutManager(this)
+        character_recycler.adapter = CharacterAdapter(characterIds)
     }
 
     private fun SignOut(){
@@ -121,5 +134,6 @@ class MainActivity : AppCompatActivity() {
         val COLLECTION_CHARACTERS = "characters"
         val TAG_CHARACTERID = "characterId"
         val SUBCOLLECTION_USERS_CHARACTERS = "users_characters"
+        val CHARACTER_NAME = "name"
     }
 }
