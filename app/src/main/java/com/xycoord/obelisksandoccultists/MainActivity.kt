@@ -134,6 +134,10 @@ class MainActivity : AppCompatActivity() {
         val COLLECTION_CHARACTERS = "characters"
         val TAG_CHARACTERID = "characterId"
         val SUBCOLLECTION_USERS_CHARACTERS = "users_characters"
+
         val CHARACTER_NAME = "name"
+        val CHARACTER_DESCRIPTOR = "descriptor"
+        val CHARACTER_TYPE = "type"
+        val CHARACTER_FOCUS = "focus"
     }
 }
